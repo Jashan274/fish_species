@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fish Species Predictor</title>
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+        }
+        h1 {
+            text-align: center;
+            color: #343a40;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        .btn {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        #result {
+            text-align: center;
+            font-size: 1.2em;
+            color: #28a745;
+            margin-top: 20px;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#prediction-form').on('submit', function (e) {
+                e.preventDefault();
+
+                var data = {
+                    Weight: $('#weight').val(),
+                    Length1: $('#length1').val(),
+                    Length2: $('#length2').val(),
+                    Length3: $('#length3').val(),
+                    Height: $('#height').val(),
+                    Width: $('#width').val()
+                };
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/predict',
+                    contentType: 'application/json',
+                    data: JSON.stringify(data),
+                    success: function (response) {
+                        $('#result').html('Predicted Species: ' + response.predicted_species);
+                    },
+                    error: function (error) {
+                        console.log(error);
+                        $('#result').html('An error occurred.');
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Fish Species Predictor</h1>
+        <form id="prediction-form">
+            <div class="form-group">
+                <label for="weight">Weight:</label>
+                <input type="number" id="weight" name="Weight" step="any" required>
+            </div>
+            <div class="form-group">
+                <label for="length1">Length1:</label>
+                <input type="number" id="length1" name="Length1" step="any" required>
+            </div>
+            <div class="form-group">
+                <label for="length2">Length2:</label>
+                <input type="number" id="length2" name="Length2" step="any" required>
+            </div>
+            <div class="form-group">
+                <label for="length3">Length3:</label>
+                <input type="number" id="length3" name="Length3" step="any" required>
+            </div>
+            <div class="form-group">
+                <label for="height">Height:</label>
+                <input type="number" id="height" name="Height" step="any" required>
+            </div>
+            <div class="form-group">
+                <label for="width">Width:</label>
+                <input type="number" id="width" name="Width" step="any" required>
+            </div>
+            <button type="submit" class="btn">Predict</button>
+        </form>
+        <div id="result"></div>
+    </div>
+</body>
+</html>
